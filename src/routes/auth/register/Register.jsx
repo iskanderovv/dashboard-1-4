@@ -133,9 +133,9 @@ const Register = () => {
         </Button>
       </Form.Item>
       <Divider> <span className='text-gray-500'>Or</span> </Divider>
-      <div className='flex justify-center flex-col gap-4 w-full'>
+      <div className='flex justify-center flex-col items-center gap-4 w-full'>
         <GoogleLogin
-          
+
           onSuccess={async (credentialResponse) => {
             const decode = credentialResponse.credential.split(".")[1];
             const userData = JSON.parse(atob(decode));

@@ -124,7 +124,7 @@ const Login = () => {
         </Button>
       </Form.Item>
       <Divider> <span className='text-gray-500'>Or</span> </Divider>
-      <div className='flex justify-center flex-col gap-4'>
+      <div className='flex justify-center flex-col items-center gap-4'>
         <GoogleLogin
           onSuccess={async (credentialResponse) => {
             const decode = credentialResponse.credential.split(".")[1];
