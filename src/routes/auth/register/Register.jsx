@@ -4,6 +4,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import axios from "../../../api";
 import { useDispatch, useSelector } from 'react-redux';
 import { ERROR, LOADING, REGISTER } from '../../../redux/actions/action-types';
+import TelegramLoginButton from 'telegram-login-button';
+
 
 const { Title, Text } = Typography;
 
@@ -35,6 +37,10 @@ const Register = () => {
       });
     }
     form.resetFields();
+  };
+
+  const onRememberMeChange = (e) => {
+    dispatch({ type: SET_REMEMBER_ME, payload: e.target.checked });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -108,11 +114,12 @@ const Register = () => {
         style={{ marginBottom: "6px" }}
         name="remember"
         valuePropName="checked"
+        onChange={onRememberMeChange}
         wrapperCol={{
           span: 16,
         }}
       >
-        <Checkbox>Remember me</Checkbox>
+        <Checkbox onChange={onRememberMeChange}>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item
@@ -126,8 +133,9 @@ const Register = () => {
         </Button>
       </Form.Item>
       <Divider> <span className='text-gray-500'>Or</span> </Divider>
-      <div className='flex justify-center'>
+      <div className='flex justify-center flex-col gap-4 w-full'>
         <GoogleLogin
+          
           onSuccess={async (credentialResponse) => {
             const decode = credentialResponse.credential.split(".")[1];
             const userData = JSON.parse(atob(decode));
@@ -173,6 +181,10 @@ const Register = () => {
             });
           }}
           useOneTap
+        />
+        <TelegramLoginButton
+          botName="ecommerce60_bot"
+          dataOnauth={user => console.log(user)}
         />
       </div>
       <Text className='mt-[20px] block text-center'> Already have an account? <Link to="/auth">Login</Link> </Text>

@@ -1,17 +1,18 @@
 import { Button, Checkbox, Form, Input, Typography, Divider, notification } from 'antd';
 import { Link } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
-import { useState } from 'react';
+import TelegramLoginButton from 'telegram-login-button';
 import axios from "../../../api";
 import { useDispatch, useSelector } from 'react-redux';
-import { ERROR, LOADING, LOGIN } from '../../../redux/actions/action-types';
+import { ERROR, LOADING, LOGIN, SET_REMEMBER_ME } from '../../../redux/actions/action-types';
 
 const { Title, Text } = Typography;
 
 const Login = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const loading = useSelector(state => state.loading)
+  const loading = useSelector(state => state.loading);
+  const rememberMe = useSelector(state => state.rememberMe);
 
   const onFinish = async (values) => {
     try {
@@ -20,8 +21,10 @@ const Login = () => {
       console.log(data);
       dispatch({ type: LOGIN, token: data.payload.token, user: data.payload.user });
 
-
-      localStorage.setItem("token", data.payload.token);
+      if (values.remember) {
+        localStorage.setItem("token", data.payload.token);
+        localStorage.setItem("user", JSON.stringify(data.payload.user));
+      }
 
       notification.success({
         message: 'Login Successful',
@@ -38,6 +41,10 @@ const Login = () => {
       });
     }
     form.resetFields();
+  };
+
+  const onRememberMeChange = (e) => {
+    dispatch({ type: SET_REMEMBER_ME, payload: e.target.checked });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -59,7 +66,7 @@ const Login = () => {
         maxWidth: 600,
       }}
       initialValues={{
-        remember: true,
+        remember: rememberMe,
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -97,11 +104,12 @@ const Login = () => {
       <Form.Item
         name="remember"
         valuePropName="checked"
+        onChange={onRememberMeChange}
         wrapperCol={{
           span: 16,
         }}
       >
-        <Checkbox>Remember me</Checkbox>
+        <Checkbox onChange={onRememberMeChange}>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item
@@ -116,7 +124,7 @@ const Login = () => {
         </Button>
       </Form.Item>
       <Divider> <span className='text-gray-500'>Or</span> </Divider>
-      <div className='flex justify-center'>
+      <div className='flex justify-center flex-col gap-4'>
         <GoogleLogin
           onSuccess={async (credentialResponse) => {
             const decode = credentialResponse.credential.split(".")[1];
@@ -149,6 +157,10 @@ const Login = () => {
             });
           }}
           useOneTap
+        />
+        <TelegramLoginButton
+          botName="ecommerce60_bot"
+          dataOnauth={user => console.log(user)}
         />
       </div>
       <Text className='mt-[20px] block text-center'> Don't have an account? <Link to="/auth/register">Register</Link> </Text>
