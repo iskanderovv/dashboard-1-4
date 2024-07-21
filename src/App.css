@@ -1,0 +1,4 @@
+.ant-menu-item:has(.active) {
+  color: #fff;
+  background-color: #1677ff;
+}
