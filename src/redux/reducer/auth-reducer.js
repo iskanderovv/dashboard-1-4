@@ -1,5 +1,4 @@
 import {
-  AVATAR_COLOR,
   ERROR,
   LOADING,
   LOGIN,

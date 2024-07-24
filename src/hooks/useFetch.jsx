@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from '../api'
 
-const useFetch = (URL) => {
+const useFetch = (ENDPOINT) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -9,7 +9,7 @@ const useFetch = (URL) => {
     const dataLoad = async () => {
       try{
         setLoading(true);
-        const response = await axios(URL);
+        const response = await axios(ENDPOINT);
         setData(response.data?.payload);
       }
       catch(error){
@@ -21,7 +21,7 @@ const useFetch = (URL) => {
     }
 
     dataLoad();
-  }, [URL])
+  }, [ENDPOINT])
 
   return [data, loading];
 }

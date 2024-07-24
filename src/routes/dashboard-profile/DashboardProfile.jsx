@@ -16,7 +16,7 @@ const DashboardProfile = () => {
       <div className="flex gap-5 flex-col">
         <div className="w-36 h-36 flex items-center justify-center rounded-full bg-gray-200">
           <span className="text-gray-600 text-3xl">
-            {user.username.charAt(0).toUpperCase()}
+            {user.first_name.charAt(0).toUpperCase()}
           </span>
         </div>
         <div className="ml-4 flex-1">
