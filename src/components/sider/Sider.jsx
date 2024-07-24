@@ -29,7 +29,7 @@ const SiderComponent = ({ collapsed }) => {
       collapsible
       collapsed={collapsed}
       breakpoint="lg"
-      collapsedWidth="0"
+      collapsedWidth="70"
       onBreakpoint={(broken) => {
         console.log(broken);
       }}
@@ -41,6 +41,7 @@ const SiderComponent = ({ collapsed }) => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={['1']}
+        inlineCollapsed={collapsed}
         items={[
           {
             key: '1',
