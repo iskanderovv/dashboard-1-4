@@ -1,18 +1,18 @@
 import { Button, Checkbox, Form, Input, Typography, Divider, notification } from 'antd';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import TelegramLoginButton from 'telegram-login-button';
-import axios from "../../../api";
 import { useDispatch, useSelector } from 'react-redux';
-import { ERROR, LOADING, LOGIN, SET_REMEMBER_ME } from '../../../redux/actions/action-types';
+import { ERROR, LOADING, LOGIN } from '../../../redux/actions/action-types';
+import axios from "../../../api";
 
 const { Title, Text } = Typography;
 
 const Login = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const loading = useSelector(state => state.loading);
-  const rememberMe = useSelector(state => state.rememberMe);
 
   const onFinish = async (values) => {
     try {
@@ -21,9 +21,8 @@ const Login = () => {
       console.log(data);
       dispatch({ type: LOGIN, token: data.payload.token, user: data.payload.user });
 
-      if (values.remember) {
-        localStorage.setItem("token", data.payload.token);
-        localStorage.setItem("user", JSON.stringify(data.payload.user));
+      if(data?.payload?.token){
+        navigate('/dashboard')
       }
 
       notification.success({
@@ -43,10 +42,6 @@ const Login = () => {
     form.resetFields();
   };
 
-  const onRememberMeChange = (e) => {
-    dispatch({ type: SET_REMEMBER_ME, payload: e.target.checked });
-  };
-
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
@@ -64,9 +59,6 @@ const Login = () => {
       }}
       style={{
         maxWidth: 600,
-      }}
-      initialValues={{
-        remember: rememberMe,
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -104,12 +96,11 @@ const Login = () => {
       <Form.Item
         name="remember"
         valuePropName="checked"
-        onChange={onRememberMeChange}
         wrapperCol={{
           span: 16,
         }}
       >
-        <Checkbox onChange={onRememberMeChange}>Remember me</Checkbox>
+        <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item

@@ -1,11 +1,12 @@
 import { Avatar, Menu, Layout, Input, Button } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import useFetch from '../../hooks/useFetch';
 
 const { Header } = Layout;
 const { Search } = Input;
 
-const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const items = [
   {
@@ -27,6 +28,10 @@ const items = [
 ];
 
 const Navbar = ({ collapsed, toggleCollapsed }) => {
+  const [data, loading] = useFetch("/auth/profile");
+
+  console.log(data);
+
   return (
     <Header
       style={{
@@ -51,7 +56,6 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
       <Search
         placeholder="Search..."
         allowClear
-        onSearch={onSearch}
         style={{
           maxWidth: 600,
         }}
@@ -69,7 +73,12 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
             marginRight: 30
           }}
         />
-        <Avatar size="large" style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} />
+        <div className='flex items-center gap-2'>
+          <Avatar size="large" style={{ backgroundColor: '#87d068', cursor: 'pointer' }}>
+            {loading ? <UserOutlined /> : data?.first_name.at(0).toUpperCase()}
+          </Avatar>
+          <span className='text-white text-[17px]'>{ loading ? "User": data?.first_name.at(0).toUpperCase() + data?.first_name.slice(1).toLowerCase() }</span>
+        </div>
       </div>
     </Header>
   );

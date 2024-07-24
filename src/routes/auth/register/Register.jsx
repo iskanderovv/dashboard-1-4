@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input, Typography, Divider, notification } from 'antd';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from "../../../api";
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import TelegramLoginButton from 'telegram-login-button';
 const { Title, Text } = Typography;
 
 const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const loading = useSelector(state => state.loading)
@@ -19,6 +20,12 @@ const Register = () => {
       dispatch({ type: LOADING });
       const { data } = await axios.post("/auth", values);
       dispatch({ type: REGISTER, token: data.payload.token, user: data.payload.user });
+
+      if(data?.payload?.token){
+        navigate('/dashboard')
+      }
+
+      console.log(data);
 
       notification.success({
         message: 'Registration Successful',
@@ -39,9 +46,6 @@ const Register = () => {
     form.resetFields();
   };
 
-  const onRememberMeChange = (e) => {
-    dispatch({ type: SET_REMEMBER_ME, payload: e.target.checked });
-  };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -114,12 +118,11 @@ const Register = () => {
         style={{ marginBottom: "6px" }}
         name="remember"
         valuePropName="checked"
-        onChange={onRememberMeChange}
         wrapperCol={{
           span: 16,
         }}
       >
-        <Checkbox onChange={onRememberMeChange}>Remember me</Checkbox>
+        <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item

@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom';
 import { lazy } from 'react';
 
 import Suspense from '../utils';
+import Private from './private/Private';
 
 const Home = lazy(() => import('./home/Home'));
 const Auth = lazy(() => import('./auth/Auth'));
@@ -34,18 +35,25 @@ const RouteController = () => {
         },
         {
             path: 'dashboard',
-            element: <Suspense><Dashboard /></Suspense>,
+            element: <Suspense><Private /></Suspense>,
             children: [
                 {
                     path: '',
-                    element: <Suspense><Products /></Suspense>,
-                },
-                {
-                    path: 'users',
-                    element: <Suspense><Users /></Suspense>,
-                },
+                    element: <Suspense><Dashboard /></Suspense>,
+                    children: [
+                        {
+                            path: '',
+                            element: <Suspense><Products /></Suspense>,
+                        },
+                        {
+                            path: 'users',
+                            element: <Suspense><Users /></Suspense>,
+                        },
+                    ]
+                }
             ]
-        }
+        },
+
     ]);
 };
 
