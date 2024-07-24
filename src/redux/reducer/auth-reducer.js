@@ -1,4 +1,10 @@
-import { ERROR, LOADING, LOGIN, REGISTER } from "../actions/action-types";
+import {
+  AVATAR_COLOR,
+  ERROR,
+  LOADING,
+  LOGIN,
+  REGISTER,
+} from "../actions/action-types";
 
 const initialState = {
   token: localStorage.getItem("token") || null,
@@ -38,6 +44,14 @@ export const authReducer = (state = initialState, action) => {
         loading: false,
         user: null,
         token: null,
+      };
+    case "SIGNOUT":
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return {
+        ...state,
+        token: null,
+        user: null,
       };
     default:
       return state;

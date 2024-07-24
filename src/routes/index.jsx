@@ -1,8 +1,10 @@
-import { useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes } from 'react-router-dom';
 import { lazy } from 'react';
 
 import Suspense from '../utils';
 import Private from './private/Private';
+import { useSelector } from 'react-redux';
+import DashboardProfile from './dashboard-profile/DashboardProfile';
 
 const Home = lazy(() => import('./home/Home'));
 const Auth = lazy(() => import('./auth/Auth'));
@@ -14,6 +16,7 @@ const Login = lazy(() => import('./auth/login/Login'));
 const Register = lazy(() => import('./auth/register/Register'));
 
 const RouteController = () => {
+    const auth = useSelector(state => state);
     return useRoutes([
         {
             path: '',
@@ -21,7 +24,7 @@ const RouteController = () => {
         },
         {
             path: 'auth',
-            element: <Suspense><Auth /></Suspense>,
+            element: auth.token ? <Navigate to='/dashboard' /> : <Suspense><Auth /></Suspense>,
             children: [
                 {
                     path: '',
@@ -49,6 +52,10 @@ const RouteController = () => {
                             path: 'users',
                             element: <Suspense><Users /></Suspense>,
                         },
+                        {
+                            path: 'profile',
+                            element: <Suspense><DashboardProfile /></Suspense>,
+                        }
                     ]
                 }
             ]

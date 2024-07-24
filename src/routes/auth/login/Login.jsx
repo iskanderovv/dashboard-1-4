@@ -132,6 +132,10 @@ const Login = () => {
             if (credentialResponse.credential) {
               dispatch({ type: LOGIN, token: response.data.payload.token, user: response.data.payload.user });
 
+              if(response.data?.payload?.token){
+                navigate('/dashboard')
+              }
+
               notification.success({
                 message: 'Login Successful',
                 description: 'You have successfully logged in with Google!',

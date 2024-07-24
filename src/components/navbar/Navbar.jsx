@@ -1,12 +1,10 @@
 import { Avatar, Menu, Layout, Input, Button } from 'antd';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
 import useFetch from '../../hooks/useFetch';
 
 const { Header } = Layout;
 const { Search } = Input;
-
 
 const items = [
   {
@@ -30,7 +28,23 @@ const items = [
 const Navbar = ({ collapsed, toggleCollapsed }) => {
   const [data, loading] = useFetch("/auth/profile");
 
-  console.log(data);
+  const getUserInitial = (name) => {
+    return typeof name === 'string' && name.length > 0 ? name.charAt(0).toUpperCase() : 'U';
+  };
+
+  const getAvatarColor = (name) => {
+    if (typeof name !== 'string' || name.length === 0) return '#87d068';
+
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return `hsl(${hash % 360}, 50%, 70%)`;
+  };
+
+  const userName = loading ? 'User' : `${data?.first_name?.charAt(0).toUpperCase()}${data?.first_name?.slice(1).toLowerCase()}`;
+  const avatarColor = loading ? '#87d068' : getAvatarColor(data?.first_name);
+
 
   return (
     <Header
@@ -41,7 +55,7 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
       }}
     >
       <div className='flex items-center gap-16'>
-        <div className="demo-logo" >
+        <div className="demo-logo">
           <div className='flex items-center'>
             <span className='text-white text-3xl w-full flex justify-center items-center h-full py-4 font-mono'>Ai.Dev</span>
           </div>
@@ -51,7 +65,6 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
       </div>
-
 
       <Search
         placeholder="Search..."
@@ -73,12 +86,12 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
             marginRight: 30
           }}
         />
-        <div className='flex items-center gap-2'>
-          <Avatar size="large" style={{ backgroundColor: '#87d068', cursor: 'pointer' }}>
-            {loading ? <UserOutlined /> : data?.first_name.at(0).toUpperCase()}
+        <Link to='profile' className='flex items-center gap-2'>
+          <Avatar size="large" style={{ backgroundColor: avatarColor, cursor: 'pointer' }}>
+            {loading ? <UserOutlined /> : getUserInitial(data?.first_name)}
           </Avatar>
-          <span className='text-white text-[17px]'>{ loading ? "User": data?.first_name.at(0).toUpperCase() + data?.first_name.slice(1).toLowerCase() }</span>
-        </div>
+          <span className='text-white text-[17px]'>{userName}</span>
+        </Link>
       </div>
     </Header>
   );

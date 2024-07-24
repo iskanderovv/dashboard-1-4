@@ -5,3 +5,8 @@
 .shadow-cm{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+.ant-layout-sider-children{
+    display: flex;
+    flex-direction: column;
+}

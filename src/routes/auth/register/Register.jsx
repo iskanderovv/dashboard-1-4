@@ -153,6 +153,10 @@ const Register = () => {
 
               dispatch({ type: REGISTER, token: response.data.payload.token, user: response.data.payload.user });
 
+              if(response.data?.payload?.token){
+                navigate('/dashboard')
+              }
+
               notification.success({
                 message: 'Login Successful',
                 description: 'You have successfully logged in with Google!',
