@@ -1,35 +1,17 @@
 import { Avatar, Menu, Layout, Input, Button } from 'antd';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import useFetch from '../../hooks/useFetch';
 
 const { Header } = Layout;
 const { Search } = Input;
 
-const items = [
-  {
-    key: '1',
-    label: (
-      <NavLink to="/auth">
-        Login
-      </NavLink>
-    ),
-  },
-  {
-    key: '2',
-    label: (
-      <NavLink to="/auth/register">
-        Register
-      </NavLink>
-    ),
-  }
-];
 
-const Navbar = ({ collapsed, toggleCollapsed }) => {
+const Navbar = ({ collapsed, toggleCollapsed, setTermSearch }) => {
   const [data, loading] = useFetch("/auth/profile");
 
   const getUserInitial = (name) => {
-    return typeof name === 'string' && name.length > 0 ? name.charAt(0).toUpperCase() : 'U';
+    return typeof name === 'string' && name.length > 0 ? name.slice(0, 2).toUpperCase() : 'U';
   };
 
   const getAvatarColor = (name) => {
@@ -45,6 +27,10 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
   const userName = loading ? 'User' : `${data?.first_name?.charAt(0).toUpperCase()}${data?.first_name?.slice(1).toLowerCase()}`;
   const avatarColor = loading ? '#87d068' : getAvatarColor(data?.first_name);
 
+  const searchHandle = (value) => {
+    setTermSearch(value);
+    console.log(value);
+  }
 
   return (
     <Header
@@ -68,31 +54,18 @@ const Navbar = ({ collapsed, toggleCollapsed }) => {
 
       <Search
         placeholder="Search..."
+        onChange={(e) => searchHandle(e.target.value)}
         allowClear
         style={{
           maxWidth: 600,
         }}
       />
-
-      <div className='flex items-center'>
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          items={items}
-          style={{
-            minWidth: 200,
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginRight: 30
-          }}
-        />
-        <Link to='profile' className='flex items-center gap-2'>
-          <Avatar size="large" style={{ backgroundColor: avatarColor, cursor: 'pointer' }}>
-            {loading ? <UserOutlined /> : getUserInitial(data?.first_name)}
-          </Avatar>
-          <span className='text-white text-[17px]'>{userName}</span>
-        </Link>
-      </div>
+      <Link to='profile' className='flex items-center gap-2'>
+        <Avatar size="large" style={{ backgroundColor: avatarColor, cursor: 'pointer' }}>
+          {loading ? <UserOutlined /> : getUserInitial(data?.first_name)}
+        </Avatar>
+        <span className='text-white text-[17px]'>{userName}</span>
+      </Link>
     </Header>
   );
 };

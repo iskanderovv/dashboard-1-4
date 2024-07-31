@@ -31,7 +31,6 @@ const SiderComponent = ({ collapsed }) => {
       breakpoint="lg"
       collapsedWidth="70"
       onBreakpoint={(broken) => {
-        console.log(broken);
       }}
       onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
@@ -51,7 +50,7 @@ const SiderComponent = ({ collapsed }) => {
           {
             key: '2',
             icon: <VideoCameraOutlined />,
-            label: <NavLink end className="nav-link" to="/dashboard/users">Users</NavLink>,
+            label: <NavLink end className="nav-link" to="/dashboard/users">Admins</NavLink>,
           },
         ]}
       />

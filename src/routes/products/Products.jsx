@@ -1,20 +1,29 @@
+import { useOutletContext } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { Table } from 'antd';
 const { Column } = Table;
 
 const Products = () => {
   const [data, loading] = useFetch('/product/all');
-
+  const { termSearch } = useOutletContext();
+  
+  const filteredData = data?.filter((product) => {
+    return (
+      product.product_name.toLowerCase().includes(termSearch.toLowerCase()) ||
+      product.category.toLowerCase().includes(termSearch.toLowerCase()) ||
+      product.description.toLowerCase().includes(termSearch.toLowerCase())
+    );
+  });
 
   return (
-    <Table loading={loading} dataSource={data} rowKey="_id">
+    <Table loading={loading} dataSource={filteredData} rowKey="_id">
       <Column
         title="Image"
         dataIndex="product_images"
         key="product_images"
         render={(images) => (
           <img
-            src={images[2]}
+            src={images[0]}
             alt="Product"
             style={{ width: 50, height: 50, objectFit: 'contain' }}
           />
