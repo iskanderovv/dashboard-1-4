@@ -10,19 +10,19 @@ const Users = () => {
 
   const handlePromote = async (username) => {
     try {
-      const response = await fetch('/admin/promote-user', {
+      const response = await fetch('/admin/add-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username }),
       });
-  
+
       if (response.ok) {
         message.success('User promoted successfully');
         setData((prevData) => 
           prevData.map((user) => 
-            user.username === username ? { ...user, promoted: true } : user
+            user.username === username ? { ...user, role: 'admin' } : user 
           )
         );
       } else {
@@ -49,9 +49,9 @@ const Users = () => {
           <Button
             type="primary"
             onClick={() => handlePromote(record.username)}
-            disabled={record.promoted}
+            disabled={record.role === 'admin'}
           >
-            {record.promoted ? 'Promoted' : 'Promote'}
+            {record.role === 'admin' ? 'Promoted' : 'Promote'}
           </Button>
         )}
       />
