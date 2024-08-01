@@ -33,7 +33,7 @@ const SiderComponent = ({ collapsed }) => {
       onBreakpoint={(broken) => {
       }}
       onCollapse={(collapsed, type) => {
-        console.log(collapsed, type);
+        // console.log(collapsed, type);
       }}
     >
       <Menu

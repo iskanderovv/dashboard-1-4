@@ -2,6 +2,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { Button, Table, message } from 'antd';
 const { Column } = Table;
+import axios from '../../api';
 
 const Users = () => {
   const [data, loading, setData] = useFetch('/admin/registered-users');
@@ -10,26 +11,20 @@ const Users = () => {
 
   const handlePromote = async (username) => {
     try {
-      const response = await fetch('/admin/add-admin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username }),
-      });
-
-      if (response.ok) {
+      const response = await axios.post('/admin/add-admin', { username });
+      console.log(response);
+      if (response.status === 200) {
         message.success('User promoted successfully');
-        setData((prevData) => 
-          prevData.map((user) => 
-            user.username === username ? { ...user, role: 'admin' } : user 
+        setData((prevData) =>
+          prevData.map((user) =>
+            user.username === username ? { ...user, role: 'admin' } : user
           )
         );
       } else {
-        const errorData = await response.json();
-        message.error(errorData.message || 'Failed to promote user');
+        message.error(response.data.message || 'Failed to promote user');
       }
     } catch (error) {
+      console.log(error);
       message.error('An error occurred while promoting the user');
     }
   };
@@ -56,7 +51,7 @@ const Users = () => {
         )}
       />
     </Table>
-  )
+  );
 }
 
 export default Users;

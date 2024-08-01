@@ -23,7 +23,7 @@ const useFetch = (ENDPOINT) => {
     dataLoad();
   }, [ENDPOINT])
 
-  return [data, loading];
+  return [data, loading, setData];
 }
 
 export default useFetch
