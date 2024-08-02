@@ -5,6 +5,9 @@ import Suspense from '../utils';
 import Private from './private/Private';
 import { useSelector } from 'react-redux';
 import DashboardProfile from './dashboard-profile/DashboardProfile';
+import SingleProduct from './single-product/SingleProduct';
+import Cart from './cart/Cart';
+import Notification from './notification/Notification';
 
 const Home = lazy(() => import('./home/Home'));
 const Auth = lazy(() => import('./auth/Auth'));
@@ -60,7 +63,14 @@ const RouteController = () => {
                 }
             ]
         },
-
+        {
+            path: 'single-product',
+            element: <Suspense><SingleProduct /></Suspense>,
+        },
+        {
+            path: 'cart',
+            element: <Suspense><Cart /></Suspense>,
+        }
     ]);
 };
 

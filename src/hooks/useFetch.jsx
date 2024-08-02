@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from '../api'
 
 const useFetch = (ENDPOINT) => {
+  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 

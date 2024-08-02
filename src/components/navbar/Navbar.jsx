@@ -1,4 +1,4 @@
-import { Avatar, Menu, Layout, Input, Button } from 'antd';
+import { Avatar, Menu, Layout, Input, Button, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import useFetch from '../../hooks/useFetch';
@@ -6,9 +6,21 @@ import useFetch from '../../hooks/useFetch';
 const { Header } = Layout;
 const { Search } = Input;
 
-
 const Navbar = ({ collapsed, toggleCollapsed, setTermSearch }) => {
+  const [api, contextHolder] = notification.useNotification();
   const [data, loading] = useFetch("/auth/profile");
+  const [notificationsAll] = useFetch("/notifications/all");
+
+  const openNotification = () => {  
+    api.open({
+      message: notificationsAll?.length > 0 ? 'New Notifications' : 'No new notifications',
+      description: <div className='flex flex-col gap-4 mt-3'>
+        {notificationsAll?.map(({ message }) => <p className='text-gray-700 bg-green-300 py-3 px-3'>{message}</p>)}
+      </div> || 'No new notifications',
+      duration: 0,
+    });
+  };
+  
 
   const getUserInitial = (name) => {
     return typeof name === 'string' && name.length > 0 ? name.slice(0, 2).toUpperCase() : 'U';
@@ -60,12 +72,16 @@ const Navbar = ({ collapsed, toggleCollapsed, setTermSearch }) => {
           maxWidth: 600,
         }}
       />
-      <Link to='profile' className='flex items-center gap-2'>
-        <Avatar size="large" style={{ backgroundColor: avatarColor, cursor: 'pointer' }}>
-          {loading ? <UserOutlined /> : getUserInitial(data?.first_name)}
-        </Avatar>
-        <span className='text-white text-[17px]'>{userName}</span>
-      </Link>
+      <div className='flex justify-between gap-10'>
+        {contextHolder}
+        <div className='text-white select-none' onClick={openNotification}>Notifications</div>
+        <Link to='profile' className='flex items-center gap-2'>
+          <Avatar size="large" style={{ backgroundColor: avatarColor, cursor: 'pointer' }}>
+            {loading ? <UserOutlined /> : getUserInitial(data?.first_name)}
+          </Avatar>
+          <span className='text-white text-[17px]'>{userName}</span>
+        </Link>
+      </div>
     </Header>
   );
 };
