@@ -5,10 +5,9 @@ import Suspense from '../utils';
 import Private from './private/Private';
 import { useSelector } from 'react-redux';
 import DashboardProfile from './dashboard-profile/DashboardProfile';
-import SingleProduct from './single-product/SingleProduct';
 import Cart from './cart/Cart';
-import Notification from './notification/Notification';
 
+// import SingleProduct from './single-product/SingleProduct';
 const Home = lazy(() => import('./home/Home'));
 const Auth = lazy(() => import('./auth/Auth'));
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
@@ -17,6 +16,7 @@ const Products = lazy(() => import('./products/Products'));
 const Users = lazy(() => import('./users/Users'));;
 const Login = lazy(() => import('./auth/login/Login'));
 const Register = lazy(() => import('./auth/register/Register'));
+const SingleProduct = lazy(() => import('./single-product/SingleProduct'));
 
 const RouteController = () => {
     const auth = useSelector(state => state.token);
@@ -64,7 +64,7 @@ const RouteController = () => {
             ]
         },
         {
-            path: 'single-product',
+            path: 'product/single-product/:id',
             element: <Suspense><SingleProduct /></Suspense>,
         },
         {

@@ -12,12 +12,13 @@ const TopProducts = () => {
   const handleAddToCart = (product) => {
     dispatch({ type: ADD_TO_CART, payload: product });
   };
+  
 
   return (
     <div className="max-w-[1200px] py-20 mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
       {data?.map((product) => (
         <div className="shadow-product-shadow rounded-md" key={product._id}>
-          <Link to={`/single-product/${product._id}`}>
+          <Link to={`/product/single-product/${product._id}`}>
             <img
               className="w-56 h-64 object-contain bg-gray-300 rounded-t-md"
               title={product.product_name}
